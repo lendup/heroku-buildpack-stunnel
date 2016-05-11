@@ -16,6 +16,12 @@ run-stunnel() {
 
   config-gen
 
+  # replace PSK file if env var is set
+  if [ -n "${STUNNEL_PSK}" ]; then
+    echo "${STUNNEL_PSK}" > conf/stunnelpsk.txt
+    chmod 600 conf/stunnelpsk.txt
+  fi
+
   # Use named pipe to detect exit of any subprocess.
   rm -f "$sentinel"
   mkfifo "$sentinel"
