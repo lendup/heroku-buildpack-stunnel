@@ -18,6 +18,7 @@ run-stunnel() {
 
   # replace PSK file if env var is set
   if [ -n "${STUNNEL_PSK}" ]; then
+    echo "Updating PSK from environment..."
     echo "${STUNNEL_PSK}" > conf/stunnelpsk.txt
     chmod 600 conf/stunnelpsk.txt
   fi
