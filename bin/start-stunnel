@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 main() {
   if ! is-enabled "${STUNNEL_ENABLED:-1}"; then
@@ -17,7 +18,7 @@ run-stunnel() {
   config-gen
 
   # replace PSK file if env var is set
-  if [ -n "${STUNNEL_PSK}" ]; then
+  if [ -n "${STUNNEL_PSK:-}" ]; then
     echo "Updating PSK from environment..."
     echo "${STUNNEL_PSK}" > conf/stunnelpsk.txt
     chmod 600 conf/stunnelpsk.txt
@@ -28,7 +29,9 @@ run-stunnel() {
   mkfifo "$sentinel"
 
   # Start processes.
-  aux-start stunnel SIGINT vendor/stunnel/bin/stunnel conf/stunnel.conf
+  #aux-start stunnel SIGINT vendor/stunnel/bin/stunnel conf/stunnel.conf
+  aux-start stunnel SIGINT /bin/bash -c 'echo fake-stunnel-start ; sleep 2 ; echo fake-stunnel-crash ; exit 1'
+  #aux-start stunnel SIGINT /bin/bash -c 'echo fake-stunnel-start ; sleep 1000 ; echo fake-stunnel-crash'
   app-start SIGTERM "$@"
   pid=$!
 
