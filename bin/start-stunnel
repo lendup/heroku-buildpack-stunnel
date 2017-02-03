@@ -29,9 +29,7 @@ run-stunnel() {
   mkfifo "$sentinel"
 
   # Start processes.
-  #aux-start stunnel SIGINT vendor/stunnel/bin/stunnel conf/stunnel.conf
-  aux-start stunnel SIGINT /bin/bash -c 'echo fake-stunnel-start ; sleep 2 ; echo fake-stunnel-crash ; exit 1'
-  #aux-start stunnel SIGINT /bin/bash -c 'echo fake-stunnel-start ; sleep 1000 ; echo fake-stunnel-crash'
+  aux-start stunnel SIGINT vendor/stunnel/bin/stunnel conf/stunnel.conf
   app-start SIGTERM "$@"
   pid=$!
 
