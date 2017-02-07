@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 main() {
   if ! is-enabled "${STUNNEL_ENABLED:-1}"; then
@@ -17,7 +18,7 @@ run-stunnel() {
   config-gen
 
   # replace PSK file if env var is set
-  if [ -n "${STUNNEL_PSK}" ]; then
+  if [ -n "${STUNNEL_PSK:-}" ]; then
     echo "Updating PSK from environment..."
     echo "${STUNNEL_PSK}" > conf/stunnelpsk.txt
     chmod 600 conf/stunnelpsk.txt
