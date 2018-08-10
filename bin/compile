@@ -22,8 +22,13 @@ function package_download() {
   stack="$4"
 
   mkdir -p $location
-  package="https://${S3_BUCKET}.s3.amazonaws.com/$stack/$engine-$version.tar.gz"
-  curl $package -s -o - | tar xzf - -C $location
+  package="https://artifactory.gameofloans.com/artifactory/blob-store/org.stunnel/${engine}/${engine}-${version}.tar.gz"
+  curl_opts=""
+  if [[ -n "$ARTIFACTORY_USERNAME" ]] && [[ -n "$ARTIFACTORY_PASSWORD" ]] ; then
+      curl_opts="-u ${ARTIFACTORY_USERNAME}:${ARTIFACTORY_PASSWORD}"
+  fi
+  echo "fetching $package to $location. username: '$ARTIFACTORY_USERNAME'"
+  curl $curl_opts $package -s -o - | tar xzf - -C $location
 }
 
 # Clean up leaking environment
@@ -35,9 +40,6 @@ if [ "$STACK" == "cedar-14" ]; then
 else
   STUNNEL_VERSION="5.02"
 fi
-
-# Bucket
-S3_BUCKET="heroku-buildpack-stunnel"
 
 # Directories
 BUILD_DIR=$1
