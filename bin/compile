@@ -44,11 +44,15 @@ fi
 # Directories
 BUILD_DIR=$1
 CACHE_DIR=$2
+ENV_DIR=$3
 BUILDPACK_DIR="$(dirname $(dirname $0))"
 VENDORED_STUNNEL="vendor/stunnel"
 
 echo "Using stunnel version: ${STUNNEL_VERSION}" | indent
 echo "Using stack version: ${STACK}" | indent
+
+[ -f "$ENV_DIR/ARTIFACTORY_USERNAME" ] && export ARTIFACTORY_USERNAME=$(cat "$ENV_DIR/ARTIFACTORY_USERNAME")
+[ -f "$ENV_DIR/ARTIFACTORY_PASSWORD" ] && export ARTIFACTORY_PASSWORD=$(cat "$ENV_DIR/ARTIFACTORY_PASSWORD")
 
 # Vendor stunnel into the slug
 PATH="$BUILD_DIR/$VENDORED_STUNNEL/bin:$PATH"
